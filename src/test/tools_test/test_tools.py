@@ -1,18 +1,24 @@
-from pytometa import tools
+from pytometa import tools, loader
+from pytometa.descriptors import TypeDescriptor
+
 
 class _A(object):
-    a=None
-    b=1
-    c=""
+    a = TypeDescriptor(int)
+    b = TypeDescriptor(str)
 
-def test_GetAllFields():
-    fields = tools.getAllFields(_A)
-    assert "a" in fields
-    assert "b" in fields
-    assert "c" in fields
+    def __str__(self):
+        fields = ["{}={}".format(k[0], k[1]) for k in tools.getAllFieldItems(self)]
+        return "_A[{}]".format(", ".join(fields))
 
-def test_GetAllFieldItems():
-    fields = tools.getAllFieldItems(_A)
-    assert ("a", None) in fields
-    assert ('b', 1) in fields
-    assert ('c', '') in fields
+
+def test_load():
+    res = loader.load_from_dict({
+        "a": 1,
+        "b": "123123123",
+        "c": {}
+    }, _A())
+
+    print(res)
+
+
+

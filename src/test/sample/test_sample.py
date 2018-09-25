@@ -1,4 +1,4 @@
-# content of test_tools.py
+# content of test_loader.py
 def func(x):
     return x + 1
 
