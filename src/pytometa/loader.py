@@ -1,6 +1,8 @@
-from descriptors import TypeDescriptor
+from pytometa import tools
+from pytometa.descriptors import TypeDescriptor
 
-
-def load_from_dict(dict, type_descriptor: TypeDescriptor, raise_on_receiver_absent=False):
-    for k in type_descriptor:
-
+def load_from_dict(dict, obj, raise_on_receiver_absent=False):
+    assert obj, "object is empty"
+    fields = tools.getAllFieldItems(obj.__class__)
+    for k in fields:
+        pass
