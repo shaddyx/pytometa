@@ -51,7 +51,6 @@ class ListDescriptor(FieldDescriptor):
                 result.append(loader.load_from_dict(k, tools.create_instance(self.type)))
         return result
 
-
 class DictDescriptor(FieldDescriptor):
 
     def __init__(self, typ, name=None, required=True, default=None):
