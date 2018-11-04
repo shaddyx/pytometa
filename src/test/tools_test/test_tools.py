@@ -12,13 +12,15 @@ class _A(object):
 
 
 def test_load():
+
     res = loader.load_from_dict({
         "a": 1,
         "b": "123123123",
         "c": {}
     }, _A())
+    assert res.a == 1
+    assert res.b == "123123123"
 
-    print(res)
 
 
 

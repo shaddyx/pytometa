@@ -1,18 +1,29 @@
+import typing
+
 from pytometa import tools
-from pytometa.descriptors import TypeDescriptor
+from pytometa.descriptors import FieldDescriptor
 
+_T = typing.TypeVar('T')
 
-def load_field(obj, dic, meta: TypeDescriptor):
-    setattr(obj, meta.name, dic[meta.name])
+def allowed_field_name(name:str):
+    return not name.startswith('_')
 
-def load_from_dict(dic, obj):
+def load_field(obj, dic, meta: FieldDescriptor):
+    setattr(obj, meta.name, meta.load_function(dic))
+
+def load_from_dict(dic, obj: _T) -> _T:
     assert obj, "object is empty"
     fields = tools.getAllFieldItems(obj.__class__)
     for k in fields:
-        meta = k[1]
         name = k[0]
-        if isinstance(meta, TypeDescriptor):
-            if not meta.name:
-                meta.name = name
-            load_field(obj, dic, meta)
+        metaInfo = k[1]
+        if isinstance(metaInfo, FieldDescriptor):
+            if not metaInfo.name:
+                metaInfo.name = name
+            load_field(obj, dic, metaInfo)
+        elif allowed_field_name(name) and isinstance(metaInfo, type):
+            # set primitive
+            val = metaInfo(dic[name])
+            setattr(obj, name, val)
+
     return obj
