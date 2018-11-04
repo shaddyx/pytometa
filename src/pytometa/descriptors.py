@@ -1,7 +1,7 @@
 import abc
 import logging
 
-from pytometa import loader
+from pytometa import loader, tools
 
 
 class FieldDescriptor(object):
@@ -25,8 +25,9 @@ class FieldDescriptor(object):
 
 class TypeDescriptor(FieldDescriptor):
 
-    def __init__(self, typ, name=None, required=True, default=None):
+    def __init__(self, typ, name=None, required=True, default=None, new_instance=lambda arg: arg.type()):
         self.type = typ
+        self.new_instance = new_instance
         super().__init__(name, required, default)
 
     def load_function(self, dic):
@@ -44,5 +45,8 @@ class ListDescriptor(FieldDescriptor):
         assert type(self._get_value(dic)) is list, "list expected, but {} given [{}]: {} ".format(type(self.__get_value(dic)), self.name, self.__get_value(dic))
         result = []
         for k in self._get_value(dic):
-            result.append(loader.load_from_dict(k, self.type))
+            if tools.is_primitive_type(self.type):
+                result.append(self.type(k))
+            else:
+                result.append(loader.load_from_dict(k, tools.create_instance(self.type)))
         return result
