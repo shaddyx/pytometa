@@ -50,3 +50,21 @@ class ListDescriptor(FieldDescriptor):
             else:
                 result.append(loader.load_from_dict(k, tools.create_instance(self.type)))
         return result
+
+
+class DictDescriptor(FieldDescriptor):
+
+    def __init__(self, typ, name=None, required=True, default=None):
+        self.type = typ
+        super().__init__(name, required, default)
+
+    def load_function(self, dic):
+        assert type(self._get_value(dic)) is list, "list expected, but {} given [{}]: {} ".format(type(self.__get_value(dic)), self.name, self.__get_value(dic))
+        result = {}
+        val = self._get_value(dic);
+        for k in val:
+            if tools.is_primitive_type(self.type):
+                result[k] = self.type(val[k])
+            else:
+                result[k] = loader.load_from_dict(val[k], tools.create_instance(self.type))
+        return result
