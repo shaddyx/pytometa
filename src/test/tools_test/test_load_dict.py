@@ -8,10 +8,10 @@ class _A(object):
     b = TypeDescriptor(str)
 
 class _C(object):
-    inner = DictDescriptor(TypeDescriptor(_A))  # type: typing.List
+    inner = ListDescriptor(TypeDescriptor(_A))  # type: typing.List
 
 class _D(object):
-    inner = DictDescriptor(_A)  # type: typing.List
+    inner = ListDescriptor(_A)  # type: typing.List
 
 
 def test_load_dict_object():
