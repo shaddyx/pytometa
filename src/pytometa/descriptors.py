@@ -58,7 +58,7 @@ class DictDescriptor(FieldDescriptor):
         super().__init__(name, required, default)
 
     def load_function(self, dic):
-        assert type(self._get_value(dic)) is list, "list expected, but {} given [{}]: {} ".format(type(self.__get_value(dic)), self.name, self.__get_value(dic))
+        assert type(self._get_value(dic)) is dict, "list expected, but {} given [{}]: {} ".format(type(self.__get_value(dic)), self.name, self.__get_value(dic))
         result = {}
         val = self._get_value(dic);
         for k in val:

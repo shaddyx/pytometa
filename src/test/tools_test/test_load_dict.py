@@ -8,52 +8,31 @@ class _A(object):
     b = TypeDescriptor(str)
 
 class _C(object):
-    inner = DictDescriptor(TypeDescriptor(_A))  # type: typing.List
+    inner = DictDescriptor(TypeDescriptor(_A))  # type: typing.Dict[str, int]
 
 class _D(object):
-    inner = DictDescriptor(_A)  # type: typing.List
+    inner = DictDescriptor(_A)  # type: typing.Dict
 
 
 def test_load_dict_object():
 
     res = loader.load_from_dict({
-        "inner":[
-            {
+        "inner":{
+            "zz":{
                 "a": 1,
                 "b": 2,
             },
-            {
+            "xx": {
                 "a": 3,
                 "b": 4,
             }
-        ]
+        }
     }, _C())
-    assert type(res.inner) is list
+    assert type(res.inner) is dict
     assert len(res.inner) == 2
-    assert res.inner[0].a == 1
-    assert res.inner[1].a == 3
-    assert res.inner[0].b == '2'
-    assert res.inner[1].b == '4'
+    assert res.inner["zz"].a == 1
+    assert res.inner["zz"].b == "2"
+    assert res.inner["xx"].a == 3
+    assert res.inner["xx"].b == '4'
 
 
-
-def test_load_list_object_no_typedescriptor():
-
-    res = loader.load_from_dict({
-        "inner":[
-            {
-                "a": 1,
-                "b": 2,
-            },
-            {
-                "a": 3,
-                "b": 4,
-            }
-        ]
-    }, _D())
-    assert type(res.inner) is list
-    assert len(res.inner) == 2
-    assert res.inner[0].a == 1
-    assert res.inner[1].a == 3
-    assert res.inner[0].b == '2'
-    assert res.inner[1].b == '4'
